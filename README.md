@@ -1,2 +1,5 @@
-# DreemEEG
-realtime but kinda low quality EEG data export from the Dreem band
+The Dreem band streams EEG data when you need to check the band is fitting correctly. You can use this feature to stream data from what I think is 4 channels of EEG, the major caveat to this is that the data is only 8 bit. There's actually a lot more data that gets sent but I've only looked at the larger arrays that are EEG.
+
+I use the ConnectDreem script to stream the data from the band using bluetooth and then the parseDreem script to process the bin file that is created. The data that's sent from the band is separated by a kind of index for the different arrays and they come in at somewhat random order so I just create a dict with the index value and then the values, which are 3 8bit numbers - at least for the EEG signal anyway, some of the others might be a different bit-length but I doubt it.
+
+The streaming script doesn't have any disconnect handling in it so if you wanted to run this for longer you'd need to build that in, for me it usually lasts around 10-15 minutes  before bluetooth does what bluetooth does and cuts out. If it only last like 20 seconds or so then you've sent something in the gatt writes that the band didn't like so it won't trust you. Easiest thing to do is get the android app and then look at the bluetooth HCI logs and literally just copy the BLE write order as you see it in there - it shouldn't be too different to what I've got so you can look out for a similar order.
